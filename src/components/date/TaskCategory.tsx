@@ -7,15 +7,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Controller } from "react-hook-form";
+import { Control, Controller, FieldValues, Path } from "react-hook-form";
 
-interface TaskCategoryProps {
-  name: string;
-  control: any;
+interface TaskCategoryProps<T extends FieldValues> {
+  name: Path<T>
+  control: Control<T>;
 }
 
-const TaskCategory = ({ name, control }: TaskCategoryProps) => {
-  const DammyCategories = ["学習", "仕事", "趣味", "その他"];
+
+const TaskCategory = <T extends FieldValues>({ name, control }:TaskCategoryProps<T>) => {
+  const DammyCategories = ["学習", "仕事", "趣味", "その他"] as const;
 
   return (
     <Controller

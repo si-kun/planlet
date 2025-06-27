@@ -17,6 +17,7 @@ const PRIORITY_COLORS: Record<Priority, string> = {
   high: "bg-red-100 border-red-300 text-red-800",
 } as const;
 
+
 interface PrioritySelectProps<T extends FieldValues> {
   control: Control<T>;
   name: Path<T>;
@@ -28,7 +29,6 @@ const PrioritySelect = <T extends FieldValues>({
   control,
   name,
   label = "優先度",
-  error,
 }: PrioritySelectProps<T>) => {
   const PRIORITY_OPTIONS: Priority[] = ["low", "medium", "high"];
 
