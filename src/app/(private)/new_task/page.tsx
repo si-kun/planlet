@@ -13,6 +13,7 @@ import { PrivateTaskForm, privateTaskSchema } from "@/schemas/taskSchema";
 import ScheduleSelector from "@/components/date/ScheduleSelector";
 import AddCheckList from "@/components/form/newTask/AddCheckList";
 import { ScheduleType } from "@/types/form";
+import toast from "react-hot-toast";
 
 const NewTask = () => {
   const { register, handleSubmit, control, watch } = useForm<PrivateTaskForm>({
@@ -67,6 +68,13 @@ const NewTask = () => {
     };
 
     console.log("送信", submitData);
+
+    try {
+      
+    }catch(error) {
+      console.error("タスクの送信中にエラーが発生しました:", error);
+      toast.error("タスクの送信中にエラーが発生しました。もう一度お試しください。");
+    }
   };
 
   return (
