@@ -30,6 +30,7 @@ const NewTask = () => {
           id: uuidv4(),
           checkTitle: "",
           isChecked: false,
+          order: 0,
         },
       ],
     },
@@ -48,6 +49,7 @@ const NewTask = () => {
       id: uuidv4(),
       checkTitle: "",
       isChecked: false,
+      order: fields.length,
     });
   };
 

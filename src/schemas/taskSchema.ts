@@ -15,6 +15,7 @@ export const privateTaskSchema = z
         id: z.string(),
         checkTitle: z.string().min(1, "チェックリストの項目は必須です"),
         isChecked: z.boolean(),
+        order: z.number()
       })
     ),
   })

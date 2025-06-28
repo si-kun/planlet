@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  email    String @unique
+  username String @unique
+
+  myTasks      Task[]
+  myCategories MyCategory[]
+}
+
+model Task {
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  scheduleType String
+  startDate    DateTime
+  endDate      DateTime
+  priority     String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  //外部キー
+  userId String
+
+  // リレーション
+  user       User           @relation(fields: [userId], references: [id])
+  categories TaskCategory[]
+  checklists Checklist[]
+
+  @@unique([userId, title])
+}
+
+model MyCategory {
+  id String @id @default(uuid())
+  name String
+
+// 外部キー
+  userId String
+
+  // リレーション
+  user   User   @relation(fields: [userId], references: [id])
+  tasks  TaskCategory[]
+
+  @@unique([userId, name])
+}
+
+model TaskCategory {
+  id String @id @default(uuid())
+
+  // 外部キー
+  taskId String
+  categoryId String
+
+  // リレーション
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  category MyCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([taskId, categoryId])
+}
+
+model Checklist {
+  id        String  @id
+  title     String
+  isChecked Boolean
+  order     Int
+
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id])
+}
