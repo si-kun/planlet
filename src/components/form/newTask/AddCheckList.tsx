@@ -44,7 +44,7 @@ const AddCheckList = ({
               />
               <Input
                 placeholder="タスクを入力"
-                {...register(`checklist.${index}.checkTitle`)}
+                {...register(`checklist.${index}.title`)}
               />
               <Button
                 type="button"

@@ -9,16 +9,19 @@ export default function Home() {
       title: "個人タスク",
       color: "bg-blue-500/50",
       tasklength: 10,
+      link: "/mytask",
     },
     {
       title: "グループタスク",
       color: "bg-pink-500/50",
       tasklength: 3,
+      link: "grouptask",
     },
     {
       title: "TODO",
       color: "bg-green-400/50",
       tasklength: 4,
+      link: "todo",
     },
   ];
 
@@ -36,16 +39,25 @@ export default function Home() {
           <p>カレンダー実装エリア</p>
         </Card>
 
-        {DammyCards.map((card, index) => (
-          <Card key={index} className="p-4">
-            <div className="flex items-center justify-between">
-              <h3>{card.title}</h3>
-              <Button variant={"secondary"} size={"icon"} className={`${card.color}`}>
-                <ListCollapse />
-              </Button>
-            </div>
-          </Card>
-        ))}
+        <div className="flex flex-col gap-4">
+          {DammyCards.map((card, index) => (
+            <Card key={index} className="p-4 hover:shadow-lg transition-shadow">
+              <Link
+                href={card.link}
+                className="flex items-center justify-between"
+              >
+                <h3>{card.title}</h3>
+                <Button
+                  variant={"secondary"}
+                  size={"icon"}
+                  className={`${card.color}`}
+                >
+                  <ListCollapse />
+                </Button>
+              </Link>
+            </Card>
+          ))}
+        </div>
       </main>
     </div>
   );

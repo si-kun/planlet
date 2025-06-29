@@ -14,9 +14,13 @@ import ScheduleSelector from "@/components/date/ScheduleSelector";
 import AddCheckList from "@/components/form/newTask/AddCheckList";
 import { ScheduleType } from "@/types/form";
 import toast from "react-hot-toast";
+import { addTask } from "@/actions/task/addTask";
+import { useAtomValue } from "jotai";
+import { userAtom } from "@/atom/auth";
+import { useRouter } from "next/navigation";
 
 const NewTask = () => {
-  const { register, handleSubmit, control, watch } = useForm<PrivateTaskForm>({
+  const { register, handleSubmit, control, watch,reset } = useForm<PrivateTaskForm>({
     resolver: zodResolver(privateTaskSchema),
     defaultValues: {
       title: "",
@@ -29,13 +33,19 @@ const NewTask = () => {
       checklist: [
         {
           id: uuidv4(),
-          checkTitle: "",
+          title: "",
           isChecked: false,
           order: 0,
         },
       ],
     },
   });
+
+  const user = useAtomValue(userAtom);
+
+  const router = useRouter()
+
+
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -48,13 +58,22 @@ const NewTask = () => {
   const addChecklistItem = () => {
     append({
       id: uuidv4(),
-      checkTitle: "",
+      title: "",
       isChecked: false,
       order: fields.length,
     });
   };
 
-  const handleFormSubmit = (data: PrivateTaskForm) => {
+  const handleFormSubmit = async(data: PrivateTaskForm) => {
+
+    if(!user || !user.id) {
+      console.error("ユーザー情報が取得できません。");
+      toast.error("ユーザー情報が取得できません")
+      return
+    }
+
+    const userId = user.id;
+
     const submitData = {
       ...data,
       startDate:
@@ -67,10 +86,45 @@ const NewTask = () => {
           : data.endDate,
     };
 
+    const task = {
+      userId,
+      title: submitData.title,
+      description: submitData.description,
+      scheduleType: submitData.scheduleType,
+      startDate: new Date(submitData.startDate ?? new Date()),
+      endDate: new Date(submitData.endDate ?? new Date()),
+      priority: submitData.priority,
+    }
+
     console.log("送信", submitData);
 
     try {
+
       
+      const response = await addTask(userId,task, data.category,data.checklist);
+
+      if(response.success) {
+        toast.success("タスクが追加されました")
+        reset({
+          title: "",
+          description: "",
+          scheduleType: "normal" as ScheduleType,
+          startDate: "",
+          endDate: "",
+          priority: "low",
+          category: "学習",
+          checklist: [
+            {
+              id: uuidv4(),
+              title: "",
+              isChecked: false,
+              order: 0,
+            },
+          ],
+        })
+        router.replace("/")
+      }
+
     }catch(error) {
       console.error("タスクの送信中にエラーが発生しました:", error);
       toast.error("タスクの送信中にエラーが発生しました。もう一度お試しください。");

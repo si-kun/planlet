@@ -13,7 +13,7 @@ export const privateTaskSchema = z
     checklist: z.array(
       z.object({
         id: z.string(),
-        checkTitle: z.string().min(1, "チェックリストの項目は必須です"),
+        title: z.string().min(1, "チェックリストの項目は必須です"),
         isChecked: z.boolean(),
         order: z.number()
       })

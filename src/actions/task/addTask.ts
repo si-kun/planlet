@@ -1,13 +1,17 @@
+"use server"
+
 import { prisma } from "@/lib/prisma";
 import { Checklist, Task } from "@prisma/client";
 
 type CreateTask = Omit<Task, "id" | "createdAt" | "updatedAt">;
 
+type CreateChecklist = Omit<Checklist, "taskId">
+
 export const addTask = async (
   userId: string,
   task: CreateTask,
   categoryName: string,
-  checklist: Checklist[]
+  checklist: CreateChecklist[]
 ) => {
   try {
     const result = await prisma.$transaction(async (tx) => {
